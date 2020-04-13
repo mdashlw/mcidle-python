@@ -12,6 +12,7 @@ class Packet:
 
     def __init__(self, **kwargs):
         self.packet_buffer_ = PacketBuffer()
+        self.compressed_buffer = kwargs.pop('compressed_buffer', None)
         self.assert_fields(**kwargs)
         self.set_fields(**kwargs)
 
