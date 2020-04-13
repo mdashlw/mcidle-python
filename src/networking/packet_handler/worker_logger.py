@@ -31,7 +31,7 @@ class WorkerLogger(threading.Thread):
         chunk_data = ChunkData().read(packet.packet_buffer)
         if chunk_data.GroundUpContinuous:
             print(f'Received chunk with GroundUpContinuous true: {chunk_data.PrimaryBitMask}')
-        if chunk_data.GroundUpContinuous and chunk_data.PrimaryBitMask == 0:
+        if chunk_data.GroundUpContinuous and chunk_data.PrimaryBitMask in (0, 1):
             self.chunk_unload(chunk_data)
             return
         chunk_key = (chunk_data.ChunkX, chunk_data.ChunkY)
