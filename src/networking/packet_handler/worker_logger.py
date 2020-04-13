@@ -14,7 +14,10 @@ class WorkerLogger(threading.Thread):
         destroy_entities = DestroyEntities().read(packet.packet_buffer)
         for entity_id in destroy_entities.Entities:
             if entity_id in self.parent.log[SpawnEntity.id]:
-                del self.parent.log[SpawnEntity.id][entity_id]  # Delete the entity
+                try:
+                    del self.parent.log[SpawnEntity.id][entity_id]  # Delete the entity
+                except KeyError:
+                    pass
 
     def chunk_load(self, packet):
         chunk_data = ChunkData().read(packet.packet_buffer)
