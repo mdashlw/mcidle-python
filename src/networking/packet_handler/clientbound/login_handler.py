@@ -64,8 +64,8 @@ class LoginHandler(PacketHandler):
                     self.mc_connection.packet_logger.log[PlayerPositionAndLookClientbound.id] \
                         .compressed_buffer)  # Send the last packet that we got
 
-        if TimeUpdate.id in self.mc_connection.packet_logger.log:
-            self.connection.send_packet(self.mc_connection.packet_logger.log[TimeUpdate.id])
+        # if TimeUpdate.id in self.mc_connection.packet_logger.log:
+        #     self.connection.send_packet(self.mc_connection.packet_logger.log[TimeUpdate.id])
 
         # Send the player list items (to see other players)
         self.send_packet_dict(PlayerListItem.id)
