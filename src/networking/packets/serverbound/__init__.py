@@ -9,7 +9,7 @@ from src.networking.types import String, Long, UnsignedShort, VarInt, VarIntPref
 
 
 class TeleportConfirm(Packet):
-    id = 0x00
+    id = 0x99
     definition = {
         "TeleportID": VarInt
     }

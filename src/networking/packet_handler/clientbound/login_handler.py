@@ -1,6 +1,6 @@
 from src.networking.packet_handler import PacketHandler
 from src.networking.packets.serverbound import Handshake, LoginStart, EncryptionResponse, ClientStatus, \
-    PlayerPositionAndLook, TeleportConfirm
+    PlayerPositionAndLook
 from src.networking.packets.clientbound import EncryptionRequest, SetCompression, SpawnEntity, ChunkData, \
     TimeUpdate, HeldItemChange, PlayerListItem
 from src.networking.packets.clientbound import PlayerPositionAndLook as PlayerPositionAndLookClientbound
@@ -55,9 +55,7 @@ class LoginHandler(PacketHandler):
 
                 pos_packet = PlayerPositionAndLookClientbound( \
                     X=last_packet.X, Y=last_packet.Y, Z=last_packet.Z, \
-                    Yaw=self.mc_connection.last_yaw, Pitch=self.mc_connection.last_pitch, Flags=0, \
-                    TeleportID=self.connection.teleport_id)
-                self.connection.teleport_id += 1
+                    Yaw=self.mc_connection.last_yaw, Pitch=self.mc_connection.last_pitch, Flags=0)
                 self.connection.send_packet(pos_packet)
             else:
                 self.connection.send_packet_buffer(
@@ -144,10 +142,9 @@ class LoginHandler(PacketHandler):
                 packet = self.read_packet_from_stream()
 
                 if packet is not None:
-                    if packet and packet.id != TeleportConfirm.id: # Sending these will crash us
-                        self.handle_position(packet)
-                        self.handle_held_item_change(packet)
-                        self.mc_connection.send_packet_buffer(packet.compressed_buffer)
+                    self.handle_position(packet)
+                    self.handle_held_item_change(packet)
+                    self.mc_connection.send_packet_buffer(packet.compressed_buffer)
                 else:
                     print("DCed? Exiting thread")
                     self.connection.on_disconnect()
