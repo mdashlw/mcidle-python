@@ -1,5 +1,5 @@
 from src.networking.packets.serverbound import KeepAlive as KeepAliveServerbound, TeleportConfirm
-from src.networking.packets.clientbound import ChunkData, UnloadChunk, SpawnEntity, Disconnect, \
+from src.networking.packets.clientbound import ChunkData, SpawnEntity, Disconnect, \
     DestroyEntities, KeepAlive, ChatMessage, PlayerPositionAndLook, TimeUpdate, HeldItemChange
 
 import threading
@@ -14,46 +14,40 @@ class WorkerLogger(threading.Thread):
         destroy_entities = DestroyEntities().read(packet.packet_buffer)
         for entity_id in destroy_entities.Entities:
             if entity_id in self.parent.log[SpawnEntity.id]:
-                print("Removed entity ID: %s" % entity_id, self.parent.log[SpawnEntity.id].keys(),
-                      flush=True)
+                #print("Removed entity ID: %s" % entity_id, self.parent.log[SpawnEntity.id].keys(),
+                #      flush=True)
                 del self.parent.log[SpawnEntity.id][entity_id]  # Delete the entity
 
-    def chunk_unload(self, packet):
-        unload_chunk = UnloadChunk().read(packet.packet_buffer)
-        chunk_key = (unload_chunk.ChunkX, unload_chunk.ChunkY)
-        if chunk_key in self.parent.log[ChunkData.id]:
-            del self.parent.log[ChunkData.id][chunk_key]
-            print("UnloadChunk", unload_chunk.ChunkX, unload_chunk.ChunkY)
+    # def chunk_unload(self, packet):
+    #     unload_chunk = UnloadChunk().read(packet.packet_buffer)
+    #     chunk_key = (unload_chunk.ChunkX, unload_chunk.ChunkY)
+    #     if chunk_key in self.parent.log[ChunkData.id]:
+    #         del self.parent.log[ChunkData.id][chunk_key]
+    #         print("UnloadChunk", unload_chunk.ChunkX, unload_chunk.ChunkY)
 
     def chunk_load(self, packet):
         chunk_data = ChunkData().read(packet.packet_buffer)
         chunk_key = (chunk_data.ChunkX, chunk_data.ChunkY)
         if chunk_key not in self.parent.log[packet.id]:
             self.parent.log[packet.id][chunk_key] = packet
-        print("ChunkData", chunk_data.ChunkX, chunk_data.ChunkY)
+        # print("ChunkData", chunk_data.ChunkX, chunk_data.ChunkY)
 
     def spawn_entity(self, packet):
         spawn_entity = SpawnEntity().read(packet.packet_buffer)
         if spawn_entity.EntityID not in self.parent.log[SpawnEntity.id]:
             self.parent.log[SpawnEntity.id][spawn_entity.EntityID] = packet
-            print("Added entity ID: %s" % spawn_entity.EntityID, self.parent.log[SpawnEntity.id].keys(),
-              flush=True)
+            #print("Added entity ID: %s" % spawn_entity.EntityID, self.parent.log[SpawnEntity.id].keys(),
+            #  flush=True)
 
     def process_packet(self, packet):
         if packet.id in self.parent.connection.join_ids:
             self.parent.log[packet.id] = packet
-        elif packet.id == ChunkData.id:  # ChunkData
-            self.chunk_load(packet)
-        elif packet.id == UnloadChunk.id:  # UnloadChunk
-            self.chunk_unload(packet)
-        elif packet.id in SpawnEntity.ids:
-            self.spawn_entity(packet)
-        elif packet.id == DestroyEntities.id:
-            self.destroy_entities(packet)
         elif packet.id == KeepAlive.id and not self.parent.connection.client_connection: # KeepAlive Clientbound
             keep_alive = KeepAlive().read(packet.packet_buffer)
+            self.parent.connection.send_packet(keep_alive)
+            #keep_alive = KeepAlive().read(packet.packet_buffer)
             print("Responded to KeepAlive", keep_alive, flush=True)
-            self.parent.connection.send_packet(KeepAliveServerbound(KeepAliveID=keep_alive.KeepAliveID))
+            #self.parent.connection.send_packet(KeepAliveServerbound(KeepAliveID=keep_alive.KeepAliveID))
         elif packet.id == ChatMessage.id:
             chat_message = ChatMessage().read(packet.packet_buffer)
             print(chat_message, flush=True)
@@ -61,7 +55,7 @@ class WorkerLogger(threading.Thread):
             pos_packet = PlayerPositionAndLook().read(packet.packet_buffer)
 
             # Send back a teleport confirm
-            self.parent.connection.send_packet(TeleportConfirm(TeleportID=pos_packet.TeleportID))
+            #self.parent.connection.send_packet(TeleportConfirm(TeleportID=pos_packet.TeleportID))
 
             # Log the packet
             self.parent.log[packet.id] = packet
@@ -69,6 +63,9 @@ class WorkerLogger(threading.Thread):
             self.parent.log[packet.id] = packet
         elif packet.id == HeldItemChange.id:
             self.parent.connection.held_item_slot = HeldItemChange().read(packet.packet_buffer).Slot
+        elif packet.id == Disconnect.id:
+            disconnect = Disconnect().read(packet.packet_buffer)
+            print(f'Disconnected: {disconnect}')
 
     def run(self):
         while True:

@@ -7,10 +7,10 @@ import argparse
 parser = argparse.ArgumentParser(add_help=True)
 parser.add_argument('--ip', help='The ip address of the server to connect to (e.g localhost)')
 parser.add_argument('--port', default=25565, help='The port of the server to connect to (default=25565)')
-parser.add_argument('--protocol', default=340, type=int, help='The protocol version of the server to connect to (default=340)')
+parser.add_argument('--protocol', default=47, type=int, help='The protocol version of the server to connect to (default=47)')
 parser.add_argument('--username', help='Your Mojang account username (an email or legacy name)')
 parser.add_argument('--password', help='Your Mojang account password')
-parser.add_argument('--dport', default=1337, type=int, help='The port to connect to with mcidle (default=1337)')
+parser.add_argument('--dport', default=25665, type=int, help='The port to connect to with mcidle (default=25665)')
 args = parser.parse_args()
 
 

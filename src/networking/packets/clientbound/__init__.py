@@ -18,7 +18,7 @@ class EncryptionRequest(Packet):
 
 
 class TimeUpdate(Packet):
-    id = 0x47
+    id = 0x03
     definition =  {
         "WorldAge": Long,
         "TimeOfDay": Long
@@ -26,7 +26,7 @@ class TimeUpdate(Packet):
 
 
 class HeldItemChange(Packet):
-    id = 0x3A
+    id = 0x09
     definition = {
         "Slot": Byte
     }
@@ -48,19 +48,19 @@ class SetCompression(Packet):
 
 
 class ChunkData(Packet):
-    id = 0x20
+    id = 0x21
     definition =  {
         "ChunkX": Integer,
         "ChunkY": Integer
     }
 
 
-class UnloadChunk(Packet):
-    id = 0x1D
-    definition =  {
-        "ChunkX": Integer,
-        "ChunkY": Integer
-    }
+# class UnloadChunk(Packet):
+#     id = 0x1D
+#     definition =  {
+#         "ChunkX": Integer,
+#         "ChunkY": Integer
+#     }
 
 
 class SpawnEntity(Packet):
@@ -72,21 +72,21 @@ class SpawnEntity(Packet):
 
 
 class DestroyEntities(Packet):
-    id = 0x32
+    id = 0x13
     definition = {
         "Entities": VarIntArray
     }
 
 
 class KeepAlive(Packet):
-    id = 0x1F
+    id = 0x00
     definition = {
-        "KeepAliveID": Long
+        "KeepAliveID": VarInt
     }
 
 
 class ChatMessage(Packet):
-    id = 0x0F
+    id = 0x02
     definition = {
         "Chat": String,
         "Position": Byte
@@ -94,27 +94,26 @@ class ChatMessage(Packet):
 
 
 class PlayerPositionAndLook(Packet):
-    id = 0x2F
+    id = 0x08
     definition = {
         "X": Double,
         "Y": Double,
         "Z": Double,
         "Yaw": Float,
         "Pitch": Float,
-        "Flags": Byte,
-        "TeleportID": VarInt
+        "Flags": Byte
     }
 
 
 class Disconnect(Packet):
-    id = 0x1A
+    id = 0x40
     definition = {
         "Reason": String
     }
 
 
 class PlayerListItem(Packet):
-    id = 0x2E
+    id = 0x38
     definition = {
         "Action": None,
         "NumberOfPlayers": None,

@@ -1,5 +1,5 @@
 from src.networking.packet_handler import WorkerLogger
-from src.networking.packets.clientbound import ChunkData, UnloadChunk, PlayerListItem, SpawnEntity
+from src.networking.packets.clientbound import ChunkData, PlayerListItem, SpawnEntity
 
 from multiprocessing import Manager, Queue
 
@@ -21,7 +21,6 @@ class PacketLogger:
     # I guess I wanted O(1) removal for deletion
     def initialize_dicts(self):
         self.log[ChunkData.id] = self.manager.dict()
-        self.log[UnloadChunk.id] = self.manager.dict()
         self.log[PlayerListItem.id] = self.manager.dict()
         self.log[SpawnEntity.id] = self.manager.dict()
 

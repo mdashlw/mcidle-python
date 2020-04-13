@@ -1,5 +1,6 @@
 import socket
 import threading
+import traceback
 
 from .auth import Auth
 from src.networking.encryption import *
@@ -97,7 +98,7 @@ class MinecraftConnection(Connection):
         self.packet_handler = ServerboundLoginHandler(self)
 
         """ JoinGame, ServerDifficulty, SpawnPosition, PlayerAbilities, Respawn """
-        self.join_ids = [0x23, 0x0D, 0x46, 0x2C, 0x35]
+        self.join_ids = []
         self.packet_logger = PacketLogger(self) # Logs incoming packets in another thread
         self.packet_logger.start_worker_threads()
 
@@ -149,6 +150,7 @@ class MinecraftServer(Connection):
             # Replace the server socket with the client's socket
             # Maybe this is a bad idea because of race conditions
             self.initialize_socket(connection)
-        except OSError:
+        except OSError as e:
+            traceback.print_exc()
             import time
             print("Failed to bind socket (race condition?), it's already on")

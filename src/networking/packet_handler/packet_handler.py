@@ -1,3 +1,5 @@
+import traceback
+
 from zlib import decompress
 from src.networking.types import VarInt
 from src.networking.packets.packet_buffer import PacketBuffer
@@ -34,7 +36,7 @@ class PacketHandler:
             length = VarInt.read(self.connection.stream)
             data = self.connection.stream.read(length)
         except (ConnectionAbortedError, ConnectionResetError, EOFError, AttributeError) as e:
-            print("Exception", e)
+            traceback.print_exc()
             return None
 
         id_buffer = PacketBuffer()

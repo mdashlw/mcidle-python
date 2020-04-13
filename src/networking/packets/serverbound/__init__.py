@@ -26,7 +26,7 @@ class Handshake(Packet):
 
 
 class HeldItemChange(Packet):
-    id = 0x1A
+    id = 0x09
     definition = {
         "Slot": Short
     }
@@ -48,21 +48,21 @@ class EncryptionResponse(Packet):
 
 
 class ClientStatus(Packet):
-    id = 0x03
+    id = 0x16
     definition = {
         "ActionID": VarInt
     }
 
 
 class KeepAlive(Packet):
-    id = 0x0B
+    id = 0x00
     definition = {
-        "KeepAliveID": Long
+        "KeepAliveID": VarInt
     }
 
 
 class PlayerPosition(Packet):
-    id = 0x0D
+    id = 0x04
     definition = {
         "X": Double,
         "Y": Double,
@@ -72,7 +72,7 @@ class PlayerPosition(Packet):
 
 
 class PlayerPositionAndLook(Packet):
-    id = 0x0E
+    id = 0x06
     definition = {
         "X": Double,
         "Y": Double,
@@ -84,14 +84,14 @@ class PlayerPositionAndLook(Packet):
 
 
 class Player(Packet):
-    id = 0x0C
+    id = 0x03
     definition = {
         "OnGround": Boolean
     }
 
 
 class ClickWindow(Packet):
-    id = 0x07
+    id = 0x0E
     definition = {
         "WindowID": UnsignedByte,
         "Slot": Short,
