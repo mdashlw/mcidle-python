@@ -1,6 +1,6 @@
 from src.networking.packets.packet import Packet
 from src.networking.types import String, VarIntPrefixedByteArray, VarInt, Integer, VarIntArray, \
-    Long, Byte, Double, Float, Boolean, UUID
+    Long, Byte, Double, Float, Boolean, UUID, UnsignedShort
 
 """
  Note: not using an OrderedDict for `definition` will break
@@ -51,7 +51,9 @@ class ChunkData(Packet):
     id = 0x21
     definition =  {
         "ChunkX": Integer,
-        "ChunkY": Integer
+        "ChunkY": Integer,
+        "GroundUpContinuous": Boolean,
+        "PrimaryBitMask": UnsignedShort
     }
 
 

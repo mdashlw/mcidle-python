@@ -19,8 +19,19 @@ class WorkerLogger(threading.Thread):
                 except KeyError:
                     pass
 
+    def chunk_unload(self, data):
+        chunk_key = (data.ChunkX, data.ChunkY)
+        if chunk_key in self.parent.log[ChunkData.id]:
+            try:
+                del self.parent.log[ChunkData.id][chunk_key]
+            except KeyError:
+                pass
+
     def chunk_load(self, packet):
         chunk_data = ChunkData().read(packet.packet_buffer)
+        if chunk_data.GroundUpContinuous and chunk_data.PrimaryBitMask == 0:
+            self.chunk_unload(chunk_data)
+            return
         chunk_key = (chunk_data.ChunkX, chunk_data.ChunkY)
         if chunk_key not in self.parent.log[packet.id]:
             self.parent.log[packet.id][chunk_key] = packet
