@@ -98,7 +98,7 @@ class MinecraftConnection(Connection):
         self.packet_handler = ServerboundLoginHandler(self)
 
         """ JoinGame, ServerDifficulty, SpawnPosition, PlayerAbilities, Respawn """
-        self.join_ids = []
+        self.join_ids = [0x01, 0x41, 0x05, 0x39, 0x07]
         self.packet_logger = PacketLogger(self) # Logs incoming packets in another thread
         self.packet_logger.start_worker_threads()
 
